@@ -51,8 +51,8 @@
         _destructiveButtonTitle = @"";
         
         NSMutableArray *args = [NSMutableArray array];
-        if (_config.buttonProperty) {
-            [args addObjectsFromArray:_config.buttonProperty.allKeys];
+        if (_config.options) {
+            [args addObjectsFromArray:_config.options.allKeys];
         }
         _otherButtonTitles = [NSArray arrayWithArray:args];
         [self _initSubViews];
@@ -238,8 +238,8 @@ otherButtonTitles:(NSString *)otherButtonTitles,
         button.backgroundColor = _config.buttonNormalBgColor;
         button.titleLabel.font = _config.buttonTextFont;
         //优先从property字典中读取字体颜色
-        if (_config.buttonProperty && _config.buttonProperty[text]) {
-            [button setTitleColor: _config.buttonProperty[text] forState:UIControlStateNormal];
+        if (_config.options && _config.options[text]) {
+            [button setTitleColor: _config.options[text] forState:UIControlStateNormal];
         } else {
             [button setTitleColor:_config.buttonTextColor forState:UIControlStateNormal];
         }

@@ -84,7 +84,7 @@
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
     dict[@"保存"] = ACRGB(255, 255, 255, 0.4);
     dict[@"修改"] = ACRGB(255, 255, 255, 0.4);
-    config.buttonProperty = dict;
+    config.options = dict;
     
     ACActionSheet *actionSheet = [[ACActionSheet alloc] initWithTitle:@"保存或删除数据" config:config delegate:self cancelButtonTitle:@"取消"];
 
