@@ -51,10 +51,9 @@ destructiveButtonTitle:(NSString *)destructiveButtonTitle
             otherButtonTitles:(NSArray *)otherButtonTitles actionSheetBlock:(ACActionSheetBlock) actionSheetBlock;
 
 - (instancetype)initWithTitle:(NSString *)title
-                config: (XJActionSheetConfig *)config
-     cancelButtonTitle:(NSString *)cancelButtonTitle
-destructiveButtonTitle:(NSString *)destructiveButtonTitle
-            otherButtonTitles:(NSArray *)otherButtonTitles actionSheetBlock:(ACActionSheetBlock) actionSheetBlock;
+                       config:(XJActionSheetConfig *)config
+            cancelButtonTitle:(NSString *)cancelButtonTitle
+             actionSheetBlock:(ACActionSheetBlock) actionSheetBlock;
 
 
 @property (nonatomic, copy) NSString *title;

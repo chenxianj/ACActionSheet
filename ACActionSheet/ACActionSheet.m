@@ -142,21 +142,6 @@ otherButtonTitles:(NSString *)otherButtonTitles,
 // MARK: - init by block
 
 - (instancetype)initWithTitle:(NSString *)title
-                       config: (XJActionSheetConfig *)config
-            cancelButtonTitle:(NSString *)cancelButtonTitle
-       destructiveButtonTitle:(NSString *)destructiveButtonTitle
-            otherButtonTitles:(NSArray *)otherButtonTitles actionSheetBlock:(ACActionSheetBlock) actionSheetBlock {
-    
-    self = [super init];
-    if(self) {
-        [self initDataWithBlock:title config:config cancelButtonTitle:cancelButtonTitle destructiveButtonTitle:destructiveButtonTitle otherButtonTitles:otherButtonTitles actionSheetBlock:actionSheetBlock];
-        [self _initSubViews];
-    }
-    
-    return self;
-}
-
-- (instancetype)initWithTitle:(NSString *)title
             cancelButtonTitle:(NSString *)cancelButtonTitle
        destructiveButtonTitle:(NSString *)destructiveButtonTitle
             otherButtonTitles:(NSArray *)otherButtonTitles actionSheetBlock:(ACActionSheetBlock) actionSheetBlock {
@@ -169,6 +154,30 @@ otherButtonTitles:(NSString *)otherButtonTitles,
     }
     
     return self;
+}
+
+- (instancetype)initWithTitle:(NSString *)title
+           config:(XJActionSheetConfig *)config
+cancelButtonTitle:(NSString *)cancelButtonTitle
+             actionSheetBlock:(ACActionSheetBlock) actionSheetBlock {
+    
+    self = [super init];
+    if(self) {
+        if (config == nil) {
+            config = [[XJActionSheetConfig alloc] init];
+        }
+        NSMutableArray *otherButtonTitles = [NSMutableArray array];
+        if (config.options) {
+            [otherButtonTitles addObjectsFromArray:config.options.allKeys];
+        }
+        [self initDataWithBlock:title config:config
+              cancelButtonTitle:cancelButtonTitle destructiveButtonTitle:@""
+              otherButtonTitles:otherButtonTitles actionSheetBlock:actionSheetBlock];
+        [self _initSubViews];
+    }
+    
+    return self;
+    
 }
 
 - (void)initDataWithBlock:(NSString *)title

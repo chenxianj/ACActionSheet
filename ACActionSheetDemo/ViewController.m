@@ -86,7 +86,13 @@
     dict[@"修改"] = ACRGB(255, 255, 255, 0.4);
     config.options = dict;
     
-    ACActionSheet *actionSheet = [[ACActionSheet alloc] initWithTitle:@"保存或删除数据" config:config delegate:self cancelButtonTitle:@"取消"];
+//    ACActionSheet *actionSheet = [[ACActionSheet alloc] initWithTitle:@"保存或删除数据" config:config delegate:self cancelButtonTitle:@"取消"];
+    
+    ACActionSheet *actionSheet = [[ACActionSheet alloc] initWithTitle:@"保存或删除数据" config:config cancelButtonTitle:@"取消" actionSheetBlock:^(NSInteger buttonIndex) {
+        if (buttonIndex == 0) {
+            
+        }
+    }];
 
     [actionSheet show];
 }
