@@ -9,8 +9,6 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-NS_ASSUME_NONNULL_BEGIN
-
 @interface XJAction : NSObject
 
 @property (nonatomic, copy) UIColor *titleColor;
@@ -18,5 +16,3 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSObject *tag;
 
 @end
-
-NS_ASSUME_NONNULL_END
