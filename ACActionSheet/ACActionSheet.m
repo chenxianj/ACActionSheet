@@ -37,22 +37,30 @@
 // MARK: - init by delegate
 
 - (instancetype)initWithTitle:(NSString *)title
+                      actions:(NSArray<XJAction *> *)actions
                        config:(XJActionSheetConfig *)config
-                      delegate:(id<ACActionSheetDelegate>)delegate cancelButtonTitle:(NSString *)cancelButtonTitle {
+                     delegate:(id<ACActionSheetDelegate>)delegate
+            cancelButtonTitle:(NSString *)cancelButtonTitle {
     self = [super init];
     if(self) {
         if (config == nil) {
             config = [[XJActionSheetConfig alloc] init];
         }
         _config = config;
+        _actions = actions;
         _title = title;
         _delegate = delegate;
         _cancelButtonTitle = cancelButtonTitle.length>0 ? cancelButtonTitle : @"取消";
         _destructiveButtonTitle = @"";
         
         NSMutableArray *args = [NSMutableArray array];
-        if (_config.options) {
-            [args addObjectsFromArray:_config.options.allKeys];
+        if (_actions) {
+            for (int32_t i = 0; i < _actions.count; i++) {
+                XJAction *action = _actions[i];
+                if (action) {
+                    [args addObject:action.title];
+                }
+            }
         }
         _otherButtonTitles = [NSArray arrayWithArray:args];
         [self _initSubViews];
@@ -157,8 +165,9 @@ otherButtonTitles:(NSString *)otherButtonTitles,
 }
 
 - (instancetype)initWithTitle:(NSString *)title
-           config:(XJActionSheetConfig *)config
-cancelButtonTitle:(NSString *)cancelButtonTitle
+                      actions:(NSArray<XJAction *> *)actions
+                       config:(XJActionSheetConfig *)config
+            cancelButtonTitle:(NSString *)cancelButtonTitle
              actionSheetBlock:(ACActionSheetBlock) actionSheetBlock {
     
     self = [super init];
@@ -166,10 +175,17 @@ cancelButtonTitle:(NSString *)cancelButtonTitle
         if (config == nil) {
             config = [[XJActionSheetConfig alloc] init];
         }
+        _actions = actions;
         NSMutableArray *otherButtonTitles = [NSMutableArray array];
-        if (config.options) {
-            [otherButtonTitles addObjectsFromArray:config.options.allKeys];
+        if (_actions) {
+            for (int32_t i = 0; i < _actions.count; i++) {
+                XJAction *action = _actions[i];
+                if (action) {
+                    [otherButtonTitles addObject:action.title];
+                }
+            }
         }
+        
         [self initDataWithBlock:title config:config
               cancelButtonTitle:cancelButtonTitle destructiveButtonTitle:@""
               otherButtonTitles:otherButtonTitles actionSheetBlock:actionSheetBlock];
@@ -240,15 +256,17 @@ cancelButtonTitle:(NSString *)cancelButtonTitle
     }
     
     for (int i = 0; i < _otherButtonTitles.count; i++) {
+        XJAction *action = _actions[i];
+        
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
         button.tag = i;
         NSString *text = _otherButtonTitles[i];
         [button setTitle:text forState:UIControlStateNormal];
         button.backgroundColor = _config.buttonNormalBgColor;
         button.titleLabel.font = _config.buttonTextFont;
-        //优先从property字典中读取字体颜色
-        if (_config.options && _config.options[text]) {
-            [button setTitleColor: _config.options[text] forState:UIControlStateNormal];
+        //优先从_actions中读取字体颜色
+        if (_actions && _actions[i]) {
+            [button setTitleColor: action.titleColor forState:UIControlStateNormal];
         } else {
             [button setTitleColor:_config.buttonTextColor forState:UIControlStateNormal];
         }
@@ -350,13 +368,20 @@ cancelButtonTitle:(NSString *)cancelButtonTitle
 }
 
 - (void)_didClickButton:(UIButton *)button {
-
-    if (_delegate && [_delegate respondsToSelector:@selector(actionSheet:didClickedButtonAtIndex:)]) {
-        [_delegate actionSheet:self didClickedButtonAtIndex:button.tag];
+    int index = (int) button.tag;
+    XJAction *action = nil;
+    if (_actions && index >= 0 && index < _actions.count) {
+        action = _actions[index];
+    }
+    //暂时认为当action为空时，为取消操作
+    Boolean isCancel = action == nil;
+    
+    if (_delegate && [_delegate respondsToSelector:@selector(actionSheet:didClickedButtonAtIndex:action:isCancel:)]) {
+        [_delegate actionSheet:self didClickedButtonAtIndex:button.tag action:action isCancel: isCancel];
     }
     
     if (self.actionSheetBlock) {
-        self.actionSheetBlock(button.tag);
+        self.actionSheetBlock(button.tag, action, isCancel);
     }
     
     [self _hide];
@@ -364,12 +389,12 @@ cancelButtonTitle:(NSString *)cancelButtonTitle
 
 - (void)_dismissView:(UITapGestureRecognizer *)tap {
 
-    if (_delegate && [_delegate respondsToSelector:@selector(actionSheet:didClickedButtonAtIndex:)]) {
-        [_delegate actionSheet:self didClickedButtonAtIndex:_otherButtonTitles.count];
+    if (_delegate && [_delegate respondsToSelector:@selector(actionSheet:didClickedButtonAtIndex:action:isCancel:)]) {
+        [_delegate actionSheet:self didClickedButtonAtIndex:_otherButtonTitles.count action: nil isCancel: true];
     }
     
     if (self.actionSheetBlock) {
-        self.actionSheetBlock(_otherButtonTitles.count);
+        self.actionSheetBlock(_otherButtonTitles.count, nil, true);
     }
     
     [self _hide];

@@ -13,10 +13,12 @@
 
 #import <UIKit/UIKit.h>
 #import "XJActionSheetConfig.h"
+#import "XJAction.h"
 
 @protocol ACActionSheetDelegate;
 
-typedef void(^ACActionSheetBlock)(NSInteger buttonIndex);
+//todo 使用泛型
+typedef void(^ACActionSheetBlock)(NSInteger buttonIndex, XJAction *action, Boolean isCancel);
 
 @interface ACActionSheet : UIView
 
@@ -33,6 +35,7 @@ typedef void(^ACActionSheetBlock)(NSInteger buttonIndex);
                      delegate:(id<ACActionSheetDelegate>)delegate cancelButtonTitle:(NSString *)cancelButtonTitle destructiveButtonTitle:(NSString *)destructiveButtonTitle otherButtonTitles:(NSString *)otherButtonTitles, ... NS_REQUIRES_NIL_TERMINATION;
 
 - (instancetype)initWithTitle:(NSString *)title
+                      actions:(NSArray<XJAction *> *)actions
                        config:(XJActionSheetConfig *)config
                      delegate:(id<ACActionSheetDelegate>)delegate cancelButtonTitle:(NSString *)cancelButtonTitle;
 
@@ -51,6 +54,7 @@ destructiveButtonTitle:(NSString *)destructiveButtonTitle
             otherButtonTitles:(NSArray *)otherButtonTitles actionSheetBlock:(ACActionSheetBlock) actionSheetBlock;
 
 - (instancetype)initWithTitle:(NSString *)title
+                      actions:(NSArray<XJAction *> *)actions
                        config:(XJActionSheetConfig *)config
             cancelButtonTitle:(NSString *)cancelButtonTitle
              actionSheetBlock:(ACActionSheetBlock) actionSheetBlock;
@@ -59,6 +63,7 @@ destructiveButtonTitle:(NSString *)destructiveButtonTitle
 @property (nonatomic, copy) NSString *title;
 @property (nonatomic, weak) id<ACActionSheetDelegate> delegate;
 @property (nonatomic, copy) XJActionSheetConfig *config;
+@property (nonatomic, copy) NSArray<XJAction *> *actions;
 
 - (void)show;
 
@@ -71,6 +76,6 @@ destructiveButtonTitle:(NSString *)destructiveButtonTitle
 
 @optional
 
-- (void)actionSheet:(ACActionSheet *)actionSheet didClickedButtonAtIndex:(NSInteger)buttonIndex;
+- (void)actionSheet:(ACActionSheet *)actionSheet didClickedButtonAtIndex:(NSInteger)buttonIndex action:(XJAction *)action isCancel:(Boolean) isCancel;
 
 @end

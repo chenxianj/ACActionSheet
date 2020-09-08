@@ -81,17 +81,25 @@
     config.cancelBtnNormalBgColor = ACRGB(42, 43, 44, 1);
     config.cancelBtnHighlightBgColor = ACRGB(0, 0, 0, 0.1);
     
-    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-    dict[@"保存"] = ACRGB(255, 255, 255, 0.4);
-    dict[@"修改"] = ACRGB(255, 255, 255, 0.4);
-    config.options = dict;
+//    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+//    dict[@"保存"] = ACRGB(255, 255, 255, 0.4);
+//    dict[@"修改"] = ACRGB(255, 255, 255, 0.4);
+    
+    NSMutableArray<XJAction *> *data = [[NSMutableArray alloc] init];
+    XJAction *action1 = [[XJAction alloc] init];
+    action1.title = @"保存";
+    action1.titleColor = ACRGB(255, 255, 255, 0.4);
+    [data addObject:action1];
+    
+    XJAction *action2 = [[XJAction alloc] init];
+    action2.title = @"修改";
+    action2.titleColor = ACRGB(255, 255, 255, 0.4);
+    [data addObject:action1];
     
 //    ACActionSheet *actionSheet = [[ACActionSheet alloc] initWithTitle:@"保存或删除数据" config:config delegate:self cancelButtonTitle:@"取消"];
     
-    ACActionSheet *actionSheet = [[ACActionSheet alloc] initWithTitle:@"保存或删除数据" config:config cancelButtonTitle:@"取消" actionSheetBlock:^(NSInteger buttonIndex) {
-        if (buttonIndex == 0) {
-            
-        }
+    ACActionSheet *actionSheet = [[ACActionSheet alloc] initWithTitle:@"保存或删除数据" actions:data config:config cancelButtonTitle:@"取消" actionSheetBlock:^(NSInteger buttonIndex, XJAction *action, Boolean isCancel) {
+        
     }];
 
     [actionSheet show];
@@ -103,7 +111,7 @@
  *   ACActionSheet type block demo 
  */
 - (IBAction)_showACActionSheetTypeBlock:(UIButton *)sender {
-    ACActionSheet *actionSheet = [[ACActionSheet alloc] initWithTitle:nil cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@[@"小视频",@"拍照",@"从手机相册选择"] actionSheetBlock:^(NSInteger buttonIndex) {
+    ACActionSheet *actionSheet = [[ACActionSheet alloc] initWithTitle:nil cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@[@"小视频",@"拍照",@"从手机相册选择"] actionSheetBlock:^(NSInteger buttonIndex, XJAction *action, Boolean isCancel) {
         NSLog(@"ACActionSheet block - %ld",buttonIndex);
     }];
     [actionSheet show];
