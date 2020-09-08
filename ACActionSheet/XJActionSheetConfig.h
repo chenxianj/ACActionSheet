@@ -36,6 +36,7 @@
 @property (nonatomic, copy) UIColor *buttonNormalBgColor;
 @property (nonatomic, copy) UIColor *buttonHighlightBgColor;
 @property (nonatomic, copy) UIColor *buttonTextColor;
+@property (nonatomic, copy) NSDictionary<NSString *, UIColor *> *buttonProperty;
 @property (nonatomic, copy) UIColor *destructiveButtonTextColor;
 @property (nonatomic, copy) UIFont *buttonTextFont;
 @property (nonatomic, assign) float buttonHeight;

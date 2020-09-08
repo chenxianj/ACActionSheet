@@ -81,8 +81,12 @@
     config.cancelBtnNormalBgColor = ACRGB(42, 43, 44, 1);
     config.cancelBtnHighlightBgColor = ACRGB(0, 0, 0, 0.1);
     
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+    dict[@"保存"] = ACRGB(255, 255, 255, 0.4);
+    dict[@"修改"] = ACRGB(255, 255, 255, 0.4);
+    config.buttonProperty = dict;
     
-    ACActionSheet *actionSheet = [[ACActionSheet alloc] initWithTitle:@"保存或删除数据" config: config delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"删除" otherButtonTitles:@"保存"];
+    ACActionSheet *actionSheet = [[ACActionSheet alloc] initWithTitle:@"保存或删除数据" config:config delegate:self cancelButtonTitle:@"取消"];
 
     [actionSheet show];
 }

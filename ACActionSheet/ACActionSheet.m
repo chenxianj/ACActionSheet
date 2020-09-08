@@ -38,10 +38,23 @@
 
 - (instancetype)initWithTitle:(NSString *)title
                        config:(XJActionSheetConfig *)config
-                      delegate:(id<ACActionSheetDelegate>)delegate cancelButtonTitle:(NSString *)cancelButtonTitle destructiveButtonTitle:(NSString *)destructiveButtonTitle otherButtonTitles:(NSString *)otherButtonTitles {
+                      delegate:(id<ACActionSheetDelegate>)delegate cancelButtonTitle:(NSString *)cancelButtonTitle {
     self = [super init];
     if(self) {
-        [self initDataWithDelegate:title config: config delegate:delegate cancelButtonTitle:cancelButtonTitle destructiveButtonTitle:destructiveButtonTitle otherButtonTitles:otherButtonTitles, nil];
+        if (config == nil) {
+            config = [[XJActionSheetConfig alloc] init];
+        }
+        _config = config;
+        _title = title;
+        _delegate = delegate;
+        _cancelButtonTitle = cancelButtonTitle.length>0 ? cancelButtonTitle : @"取消";
+        _destructiveButtonTitle = @"";
+        
+        NSMutableArray *args = [NSMutableArray array];
+        if (_config.buttonProperty) {
+            [args addObjectsFromArray:_config.buttonProperty.allKeys];
+        }
+        _otherButtonTitles = [NSArray arrayWithArray:args];
         [self _initSubViews];
     }
     
@@ -54,7 +67,33 @@
     self = [super init];
     if(self) {
         XJActionSheetConfig *config = [[XJActionSheetConfig alloc] init];
-        [self initDataWithDelegate:title config: config delegate:delegate cancelButtonTitle:cancelButtonTitle destructiveButtonTitle:destructiveButtonTitle otherButtonTitles:otherButtonTitles, nil];
+        _config = config;
+        _title = title;
+        _delegate = delegate;
+        _cancelButtonTitle = cancelButtonTitle.length>0 ? cancelButtonTitle : @"取消";
+        _destructiveButtonTitle = destructiveButtonTitle;
+        
+        NSMutableArray *args = [NSMutableArray array];
+        
+        if(_destructiveButtonTitle.length) {
+            [args addObject:_destructiveButtonTitle];
+        }
+        
+        [args addObject:otherButtonTitles];
+        
+        if (otherButtonTitles) {
+            va_list params;
+            va_start(params, otherButtonTitles);
+            id buttonTitle;
+            while ((buttonTitle = va_arg(params, id))) {
+                if (buttonTitle) {
+                    [args addObject:buttonTitle];
+                }
+            }
+            va_end(params);
+        }
+        _otherButtonTitles = [NSArray arrayWithArray:args];
+        
         [self _initSubViews];
     }
     
@@ -194,10 +233,17 @@ otherButtonTitles:(NSString *)otherButtonTitles,
     for (int i = 0; i < _otherButtonTitles.count; i++) {
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
         button.tag = i;
-        [button setTitle:_otherButtonTitles[i] forState:UIControlStateNormal];
+        NSString *text = _otherButtonTitles[i];
+        [button setTitle:text forState:UIControlStateNormal];
         button.backgroundColor = _config.buttonNormalBgColor;
         button.titleLabel.font = _config.buttonTextFont;
-        [button setTitleColor:_config.buttonTextColor forState:UIControlStateNormal];
+        //优先从property字典中读取字体颜色
+        if (_config.buttonProperty && _config.buttonProperty[text]) {
+            [button setTitleColor: _config.buttonProperty[text] forState:UIControlStateNormal];
+        } else {
+            [button setTitleColor:_config.buttonTextColor forState:UIControlStateNormal];
+        }
+        
         if (i==0 && _destructiveButtonTitle.length && _config.destructiveButtonTextColor) {
             [button setTitleColor:_config.destructiveButtonTextColor forState:UIControlStateNormal];
         }

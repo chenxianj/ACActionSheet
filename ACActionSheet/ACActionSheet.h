@@ -34,7 +34,7 @@ typedef void(^ACActionSheetBlock)(NSInteger buttonIndex);
 
 - (instancetype)initWithTitle:(NSString *)title
                        config:(XJActionSheetConfig *)config
-                     delegate:(id<ACActionSheetDelegate>)delegate cancelButtonTitle:(NSString *)cancelButtonTitle destructiveButtonTitle:(NSString *)destructiveButtonTitle otherButtonTitles:(NSString *)otherButtonTitles;
+                     delegate:(id<ACActionSheetDelegate>)delegate cancelButtonTitle:(NSString *)cancelButtonTitle;
 
 /**
  *  type block
