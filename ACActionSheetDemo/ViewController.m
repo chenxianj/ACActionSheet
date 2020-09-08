@@ -98,9 +98,13 @@
     
 //    ACActionSheet *actionSheet = [[ACActionSheet alloc] initWithTitle:@"保存或删除数据" config:config delegate:self cancelButtonTitle:@"取消"];
     
-    ACActionSheet *actionSheet = [[ACActionSheet alloc] initWithTitle:@"保存或删除数据" actions:data config:config cancelButtonTitle:@"取消" actionSheetBlock:^(NSInteger buttonIndex, XJAction *action, Boolean isCancel) {
+    ACActionSheet *actionSheet = [[ACActionSheet alloc] initWithTitle:@"保存或删除数据" actions:data config:config cancelButtonTitle:@"取消" actionSheetBlock:^(NSInteger buttonIndex, XJAction *action) {
         
+    } actionCancelBlock:^{
+         NSLog(@"click cancel");
     }];
+    
+//    [ACActionSheet alloc] initWith
 
     [actionSheet show];
 }
@@ -111,8 +115,10 @@
  *   ACActionSheet type block demo 
  */
 - (IBAction)_showACActionSheetTypeBlock:(UIButton *)sender {
-    ACActionSheet *actionSheet = [[ACActionSheet alloc] initWithTitle:nil cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@[@"小视频",@"拍照",@"从手机相册选择"] actionSheetBlock:^(NSInteger buttonIndex, XJAction *action, Boolean isCancel) {
+    ACActionSheet *actionSheet = [[ACActionSheet alloc] initWithTitle:nil cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@[@"小视频",@"拍照",@"从手机相册选择"] actionSheetBlock:^(NSInteger buttonIndex, XJAction *action) {
         NSLog(@"ACActionSheet block - %ld",buttonIndex);
+    } actionCancelBlock:^{
+        NSLog(@"click cancel");
     }];
     [actionSheet show];
 }

@@ -17,8 +17,8 @@
 
 @protocol ACActionSheetDelegate;
 
-//todo 使用泛型
-typedef void(^ACActionSheetBlock)(NSInteger buttonIndex, XJAction *action, Boolean isCancel);
+typedef void(^ACActionSheetBlock)(NSInteger buttonIndex, XJAction *action);
+typedef void(^ACActionCancelBlock)();
 
 @interface ACActionSheet : UIView
 
@@ -49,15 +49,18 @@ typedef void(^ACActionSheetBlock)(NSInteger buttonIndex, XJAction *action, Boole
  *  @param actionSheetBlock       actionSheetBlock
  */
 - (instancetype)initWithTitle:(NSString *)title
-     cancelButtonTitle:(NSString *)cancelButtonTitle
-destructiveButtonTitle:(NSString *)destructiveButtonTitle
-            otherButtonTitles:(NSArray *)otherButtonTitles actionSheetBlock:(ACActionSheetBlock) actionSheetBlock;
+            cancelButtonTitle:(NSString *)cancelButtonTitle
+       destructiveButtonTitle:(NSString *)destructiveButtonTitle
+            otherButtonTitles:(NSArray *)otherButtonTitles
+             actionSheetBlock:(ACActionSheetBlock) actionSheetBlock
+            actionCancelBlock: (ACActionCancelBlock) actionCancelBlock;
 
 - (instancetype)initWithTitle:(NSString *)title
                       actions:(NSArray<XJAction *> *)actions
                        config:(XJActionSheetConfig *)config
             cancelButtonTitle:(NSString *)cancelButtonTitle
-             actionSheetBlock:(ACActionSheetBlock) actionSheetBlock;
+             actionSheetBlock:(ACActionSheetBlock) actionSheetBlock
+            actionCancelBlock: (ACActionCancelBlock) actionCancelBlock;
 
 
 @property (nonatomic, copy) NSString *title;
@@ -76,6 +79,8 @@ destructiveButtonTitle:(NSString *)destructiveButtonTitle
 
 @optional
 
-- (void)actionSheet:(ACActionSheet *)actionSheet didClickedButtonAtIndex:(NSInteger)buttonIndex action:(XJAction *)action isCancel:(Boolean) isCancel;
+- (void)actionSheet:(ACActionSheet *)actionSheet didClickedButtonAtIndex:(NSInteger)buttonIndex action:(XJAction *)action;
+
+- (void)actionSheet:(ACActionSheet *)actionSheet didClickCancelButton:(NSInteger)buttonIndex;
 
 @end

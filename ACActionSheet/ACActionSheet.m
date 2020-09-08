@@ -29,7 +29,7 @@
 
 
 @property (nonatomic, copy) ACActionSheetBlock actionSheetBlock;
-
+@property (nonatomic, copy) ACActionCancelBlock actionCancelBlock;
 @end
 
 @implementation ACActionSheet
@@ -152,12 +152,14 @@ otherButtonTitles:(NSString *)otherButtonTitles,
 - (instancetype)initWithTitle:(NSString *)title
             cancelButtonTitle:(NSString *)cancelButtonTitle
        destructiveButtonTitle:(NSString *)destructiveButtonTitle
-            otherButtonTitles:(NSArray *)otherButtonTitles actionSheetBlock:(ACActionSheetBlock) actionSheetBlock {
+            otherButtonTitles:(NSArray *)otherButtonTitles
+             actionSheetBlock:(ACActionSheetBlock) actionSheetBlock
+            actionCancelBlock: (ACActionCancelBlock) actionCancelBlock {
     
     self = [super init];
     if(self) {
         XJActionSheetConfig *config = [[XJActionSheetConfig alloc] init];
-        [self initDataWithBlock:title config:config cancelButtonTitle:cancelButtonTitle destructiveButtonTitle:destructiveButtonTitle otherButtonTitles:otherButtonTitles actionSheetBlock:actionSheetBlock];
+        [self initDataWithBlock:title config:config cancelButtonTitle:cancelButtonTitle destructiveButtonTitle:destructiveButtonTitle otherButtonTitles:otherButtonTitles actionSheetBlock:actionSheetBlock actionCancelBlock: actionCancelBlock];
         [self _initSubViews];
     }
     
@@ -168,7 +170,8 @@ otherButtonTitles:(NSString *)otherButtonTitles,
                       actions:(NSArray<XJAction *> *)actions
                        config:(XJActionSheetConfig *)config
             cancelButtonTitle:(NSString *)cancelButtonTitle
-             actionSheetBlock:(ACActionSheetBlock) actionSheetBlock {
+             actionSheetBlock:(ACActionSheetBlock) actionSheetBlock
+            actionCancelBlock: (ACActionCancelBlock) actionCancelBlock {
     
     self = [super init];
     if(self) {
@@ -186,9 +189,7 @@ otherButtonTitles:(NSString *)otherButtonTitles,
             }
         }
         
-        [self initDataWithBlock:title config:config
-              cancelButtonTitle:cancelButtonTitle destructiveButtonTitle:@""
-              otherButtonTitles:otherButtonTitles actionSheetBlock:actionSheetBlock];
+        [self initDataWithBlock:title config:config cancelButtonTitle:cancelButtonTitle destructiveButtonTitle:@"" otherButtonTitles:otherButtonTitles actionSheetBlock:actionSheetBlock actionCancelBlock:actionCancelBlock];
         [self _initSubViews];
     }
     
@@ -201,7 +202,8 @@ otherButtonTitles:(NSString *)otherButtonTitles,
         cancelButtonTitle:(NSString *)cancelButtonTitle
    destructiveButtonTitle:(NSString *)destructiveButtonTitle
         otherButtonTitles:(NSArray *)otherButtonTitles
-         actionSheetBlock:(ACActionSheetBlock) actionSheetBlock {
+         actionSheetBlock:(ACActionSheetBlock) actionSheetBlock
+        actionCancelBlock:(ACActionCancelBlock) actionCancelBlock{
     if (config == nil) {
         config = [[XJActionSheetConfig alloc] init];
     }
@@ -217,6 +219,7 @@ otherButtonTitles:(NSString *)otherButtonTitles,
     [titleArray addObjectsFromArray:otherButtonTitles];
     _otherButtonTitles = [NSArray arrayWithArray:titleArray];
     self.actionSheetBlock = actionSheetBlock;
+    self.actionCancelBlock = actionCancelBlock;
 }
 
 
@@ -326,7 +329,7 @@ otherButtonTitles:(NSString *)otherButtonTitles,
         [cancelButton setBackgroundImage:image forState:UIControlStateHighlighted];
     }
     
-    [cancelButton addTarget:self action:@selector(_didClickButton:) forControlEvents:UIControlEventTouchUpInside];
+    [cancelButton addTarget:self action:@selector(_didClickCancelButton:) forControlEvents:UIControlEventTouchUpInside];
     [_buttonBackgroundView addSubview:cancelButton];
     
     [cancelButton setTitleEdgeInsets:UIEdgeInsetsMake(-safeAreaHeight, 0, 0, 0)];
@@ -373,30 +376,39 @@ otherButtonTitles:(NSString *)otherButtonTitles,
     if (_actions && index >= 0 && index < _actions.count) {
         action = _actions[index];
     }
-    //暂时认为当action为空时，为取消操作
-    Boolean isCancel = action == nil;
     
-    if (_delegate && [_delegate respondsToSelector:@selector(actionSheet:didClickedButtonAtIndex:action:isCancel:)]) {
-        [_delegate actionSheet:self didClickedButtonAtIndex:button.tag action:action isCancel: isCancel];
+    if (_delegate && [_delegate respondsToSelector:@selector(actionSheet:didClickedButtonAtIndex:action:)]) {
+        [_delegate actionSheet:self didClickedButtonAtIndex:button.tag action:action];
     }
     
     if (self.actionSheetBlock) {
-        self.actionSheetBlock(button.tag, action, isCancel);
+        self.actionSheetBlock(button.tag, action);
     }
     
     [self _hide];
 }
 
+- (void)_didClickCancelButton: (UIButton *)button {
+    
+    if (_delegate && [_delegate respondsToSelector:@selector(actionSheet:didClickCancelButton:)]) {
+        [_delegate actionSheet:self didClickCancelButton:button.tag];
+    }
+    
+    if (self.actionCancelBlock) {
+        self.actionCancelBlock();
+    }
+    [self _hide];
+}
+
 - (void)_dismissView:(UITapGestureRecognizer *)tap {
 
-    if (_delegate && [_delegate respondsToSelector:@selector(actionSheet:didClickedButtonAtIndex:action:isCancel:)]) {
-        [_delegate actionSheet:self didClickedButtonAtIndex:_otherButtonTitles.count action: nil isCancel: true];
+    if (_delegate && [_delegate respondsToSelector:@selector(actionSheet:didClickCancelButton:)]) {
+        [_delegate actionSheet:self didClickCancelButton:_otherButtonTitles.count];
     }
     
-    if (self.actionSheetBlock) {
-        self.actionSheetBlock(_otherButtonTitles.count, nil, true);
+    if (self.actionCancelBlock) {
+        self.actionCancelBlock();
     }
-    
     [self _hide];
 }
 
