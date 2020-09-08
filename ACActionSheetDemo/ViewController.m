@@ -60,7 +60,29 @@
  */
 - (IBAction)_showACActionSheetTypeDelegate:(UIButton *)sender {
 
-    ACActionSheet *actionSheet = [[ACActionSheet alloc] initWithTitle:@"保存或删除数据" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"删除" otherButtonTitles:@"保存",@"更改", nil];
+    #define ACRGB(r,g,b,a)    [UIColor colorWithRed:(r)/255.0f green:(g)/255.0f blue:(b)/255.0f alpha:a]
+    
+    XJActionSheetConfig *config = [[XJActionSheetConfig alloc] init];
+    config.shadowBgColor = ACRGB(0, 0, 0, 0.6);
+    config.containerBgColor = ACRGB(42, 43, 44, 1);
+    config.cornerRadius = 7;
+    config.titleLabelTextColor = ACRGB(255, 255, 255, 0.4);
+    config.titleLabelBgColor = ACRGB(42, 43, 44, 1);
+    config.titleViewHeight = 40;
+    config.buttonNormalBgColor = ACRGB(42, 43, 44, 1);
+    config.buttonHighlightBgColor = ACRGB(0, 0, 0, 0.1);
+    config.buttonTextColor = ACRGB(225, 74, 73, 1);
+    config.buttonHeight = 57;
+    config.separatorLineColor = ACRGB(255, 255, 255, 0.05);
+    config.separatorViewBgColor = ACRGB(37, 38, 39, 1);
+    config.separatorViewHeight = 8;
+    config.cancelButtonHeight = 57;
+    config.cancelButtonTextColor = ACRGB(255, 255, 255, 1);
+    config.cancelBtnNormalBgColor = ACRGB(42, 43, 44, 1);
+    config.cancelBtnHighlightBgColor = ACRGB(0, 0, 0, 0.1);
+    
+    
+    ACActionSheet *actionSheet = [[ACActionSheet alloc] initWithTitle:@"保存或删除数据" config: config delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"删除" otherButtonTitles:@"保存"];
 
     [actionSheet show];
 }

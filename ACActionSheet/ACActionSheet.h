@@ -12,6 +12,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "XJActionSheetConfig.h"
 
 @protocol ACActionSheetDelegate;
 
@@ -29,10 +30,11 @@ typedef void(^ACActionSheetBlock)(NSInteger buttonIndex);
  *  @param otherButtonTitles      otherButtonTitles
  */
 - (instancetype)initWithTitle:(NSString *)title
-                     delegate:(id<ACActionSheetDelegate>)delegate
-            cancelButtonTitle:(NSString *)cancelButtonTitle
-       destructiveButtonTitle:(NSString *)destructiveButtonTitle
-            otherButtonTitles:(NSString *)otherButtonTitles, ... NS_REQUIRES_NIL_TERMINATION;
+                     delegate:(id<ACActionSheetDelegate>)delegate cancelButtonTitle:(NSString *)cancelButtonTitle destructiveButtonTitle:(NSString *)destructiveButtonTitle otherButtonTitles:(NSString *)otherButtonTitles, ... NS_REQUIRES_NIL_TERMINATION;
+
+- (instancetype)initWithTitle:(NSString *)title
+                       config:(XJActionSheetConfig *)config
+                     delegate:(id<ACActionSheetDelegate>)delegate cancelButtonTitle:(NSString *)cancelButtonTitle destructiveButtonTitle:(NSString *)destructiveButtonTitle otherButtonTitles:(NSString *)otherButtonTitles;
 
 /**
  *  type block
@@ -44,14 +46,20 @@ typedef void(^ACActionSheetBlock)(NSInteger buttonIndex);
  *  @param actionSheetBlock       actionSheetBlock
  */
 - (instancetype)initWithTitle:(NSString *)title
-            cancelButtonTitle:(NSString *)cancelButtonTitle
-       destructiveButtonTitle:(NSString *)destructiveButtonTitle
-            otherButtonTitles:(NSArray *)otherButtonTitles
-             actionSheetBlock:(ACActionSheetBlock) actionSheetBlock;
+     cancelButtonTitle:(NSString *)cancelButtonTitle
+destructiveButtonTitle:(NSString *)destructiveButtonTitle
+            otherButtonTitles:(NSArray *)otherButtonTitles actionSheetBlock:(ACActionSheetBlock) actionSheetBlock;
+
+- (instancetype)initWithTitle:(NSString *)title
+                config: (XJActionSheetConfig *)config
+     cancelButtonTitle:(NSString *)cancelButtonTitle
+destructiveButtonTitle:(NSString *)destructiveButtonTitle
+            otherButtonTitles:(NSArray *)otherButtonTitles actionSheetBlock:(ACActionSheetBlock) actionSheetBlock;
 
 
 @property (nonatomic, copy) NSString *title;
 @property (nonatomic, weak) id<ACActionSheetDelegate> delegate;
+@property (nonatomic, copy) XJActionSheetConfig *config;
 
 - (void)show;
 

@@ -62,12 +62,12 @@
 		5AE026AD239E2E3400C853A1 /* ACActionSheet */ = {
 			isa = PBXGroup;
 			children = (
+				5806BA0425072D0100718A23 /* XJActionSheetConfig.h */,
+				5806BA0525072D0100718A23 /* XJActionSheetConfig.m */,
 				5AE026AE239E2E3400C853A1 /* ACActionSheet.h */,
 				5AE026B0239E2E3400C853A1 /* ACActionSheet.m */,
 				5AE026AF239E2E3400C853A1 /* ACActionSheet.bundle */,
 				5A866BB123A0BFF600615566 /* ACAlertView */,
-				5806BA0425072D0100718A23 /* XJActionSheetConfig.h */,
-				5806BA0525072D0100718A23 /* XJActionSheetConfig.m */,
 			);
 			path = ACActionSheet;
 			sourceTree = "<group>";

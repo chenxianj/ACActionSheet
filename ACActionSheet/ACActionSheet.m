@@ -13,24 +13,8 @@
 
 #import "ACActionSheet.h"
 
-
 #define ACScreenWidth   [UIScreen mainScreen].bounds.size.width
 #define ACScreenHeight  [UIScreen mainScreen].bounds.size.height
-#define ACRGB(r,g,b)    [UIColor colorWithRed:(r)/255.0f green:(g)/255.0f blue:(b)/255.0f alpha:1]
-#define ACButtonTitleFont     [UIFont systemFontOfSize:17.0f]
-
-
-#define ACTitleHeight 66.0f
-#define ACButtonHeight  55.0f
-#define ACSeparatorViewHeight 7.0f
-
-
-#define ACViewCornerRadius 10.0f
-
-#define ACDarkShadowViewAlpha 0.35f
-
-#define ACShowAnimateDuration 0.3f
-#define ACHideAnimateDuration 0.2f
 
 @interface ACActionSheet () {
     
@@ -50,65 +34,125 @@
 
 @implementation ACActionSheet
 
-- (instancetype)initWithTitle:(NSString *)title delegate:(id<ACActionSheetDelegate>)delegate cancelButtonTitle:(NSString *)cancelButtonTitle destructiveButtonTitle:(NSString *)destructiveButtonTitle otherButtonTitles:(NSString *)otherButtonTitles, ... NS_REQUIRES_NIL_TERMINATION {
+// MARK: - init by delegate
 
+- (instancetype)initWithTitle:(NSString *)title
+                       config:(XJActionSheetConfig *)config
+                      delegate:(id<ACActionSheetDelegate>)delegate cancelButtonTitle:(NSString *)cancelButtonTitle destructiveButtonTitle:(NSString *)destructiveButtonTitle otherButtonTitles:(NSString *)otherButtonTitles {
     self = [super init];
     if(self) {
-        _title = title;
-        _delegate = delegate;
-        _cancelButtonTitle = cancelButtonTitle.length>0 ? cancelButtonTitle : @"取消";
-        _destructiveButtonTitle = destructiveButtonTitle;
-        
-        NSMutableArray *args = [NSMutableArray array];
-        
-        if(_destructiveButtonTitle.length) {
-            [args addObject:_destructiveButtonTitle];
-        }
-        
-        [args addObject:otherButtonTitles];
-        
-        if (otherButtonTitles) {
-            va_list params;
-            va_start(params, otherButtonTitles);
-            id buttonTitle;
-            while ((buttonTitle = va_arg(params, id))) {
-                if (buttonTitle) {
-                    [args addObject:buttonTitle];
-                }
-            }
-            va_end(params);
-        }
-        
-        _otherButtonTitles = [NSArray arrayWithArray:args];
-     
+        [self initDataWithDelegate:title config: config delegate:delegate cancelButtonTitle:cancelButtonTitle destructiveButtonTitle:destructiveButtonTitle otherButtonTitles:otherButtonTitles, nil];
         [self _initSubViews];
     }
     
     return self;
 }
 
+- (instancetype)initWithTitle:(NSString *)title
+                     delegate:(id<ACActionSheetDelegate>)delegate cancelButtonTitle:(NSString *)cancelButtonTitle destructiveButtonTitle:(NSString *)destructiveButtonTitle otherButtonTitles:(NSString *)otherButtonTitles, ... NS_REQUIRES_NIL_TERMINATION {
 
-- (instancetype)initWithTitle:(NSString *)title cancelButtonTitle:(NSString *)cancelButtonTitle destructiveButtonTitle:(NSString *)destructiveButtonTitle otherButtonTitles:(NSArray *)otherButtonTitles actionSheetBlock:(ACActionSheetBlock) actionSheetBlock; {
-    
     self = [super init];
     if(self) {
-        _title = title;
-        _cancelButtonTitle = cancelButtonTitle.length>0 ? cancelButtonTitle : @"取消";
-        _destructiveButtonTitle = destructiveButtonTitle;
-        
-        NSMutableArray *titleArray = [NSMutableArray array];
-        if (_destructiveButtonTitle.length) {
-            [titleArray addObject:_destructiveButtonTitle];
-        }
-        [titleArray addObjectsFromArray:otherButtonTitles];
-        _otherButtonTitles = [NSArray arrayWithArray:titleArray];
-        self.actionSheetBlock = actionSheetBlock;
-        
+        XJActionSheetConfig *config = [[XJActionSheetConfig alloc] init];
+        [self initDataWithDelegate:title config: config delegate:delegate cancelButtonTitle:cancelButtonTitle destructiveButtonTitle:destructiveButtonTitle otherButtonTitles:otherButtonTitles, nil];
         [self _initSubViews];
     }
     
     return self;
+}
+
+- (void)initDataWithDelegate:(NSString *)title
+          config:(XJActionSheetConfig *)config
+        delegate:(id<ACActionSheetDelegate>)delegate
+cancelButtonTitle:(NSString *)cancelButtonTitle
+destructiveButtonTitle:(NSString *)destructiveButtonTitle
+otherButtonTitles:(NSString *)otherButtonTitles,
+... NS_REQUIRES_NIL_TERMINATION {
     
+    if (config == nil) {
+        config = [[XJActionSheetConfig alloc] init];
+    }
+    _config = config;
+    _title = title;
+    _delegate = delegate;
+    _cancelButtonTitle = cancelButtonTitle.length>0 ? cancelButtonTitle : @"取消";
+    _destructiveButtonTitle = destructiveButtonTitle;
+    
+    NSMutableArray *args = [NSMutableArray array];
+    
+    if(_destructiveButtonTitle.length) {
+        [args addObject:_destructiveButtonTitle];
+    }
+    
+    [args addObject:otherButtonTitles];
+    
+    if (otherButtonTitles) {
+        va_list params;
+        va_start(params, otherButtonTitles);
+        id buttonTitle;
+        while ((buttonTitle = va_arg(params, id))) {
+            if (buttonTitle) {
+                [args addObject:buttonTitle];
+            }
+        }
+        va_end(params);
+    }
+    _otherButtonTitles = [NSArray arrayWithArray:args];
+}
+
+// MARK: - init by block
+
+- (instancetype)initWithTitle:(NSString *)title
+                       config: (XJActionSheetConfig *)config
+            cancelButtonTitle:(NSString *)cancelButtonTitle
+       destructiveButtonTitle:(NSString *)destructiveButtonTitle
+            otherButtonTitles:(NSArray *)otherButtonTitles actionSheetBlock:(ACActionSheetBlock) actionSheetBlock {
+    
+    self = [super init];
+    if(self) {
+        [self initDataWithBlock:title config:config cancelButtonTitle:cancelButtonTitle destructiveButtonTitle:destructiveButtonTitle otherButtonTitles:otherButtonTitles actionSheetBlock:actionSheetBlock];
+        [self _initSubViews];
+    }
+    
+    return self;
+}
+
+- (instancetype)initWithTitle:(NSString *)title
+            cancelButtonTitle:(NSString *)cancelButtonTitle
+       destructiveButtonTitle:(NSString *)destructiveButtonTitle
+            otherButtonTitles:(NSArray *)otherButtonTitles actionSheetBlock:(ACActionSheetBlock) actionSheetBlock {
+    
+    self = [super init];
+    if(self) {
+        XJActionSheetConfig *config = [[XJActionSheetConfig alloc] init];
+        [self initDataWithBlock:title config:config cancelButtonTitle:cancelButtonTitle destructiveButtonTitle:destructiveButtonTitle otherButtonTitles:otherButtonTitles actionSheetBlock:actionSheetBlock];
+        [self _initSubViews];
+    }
+    
+    return self;
+}
+
+- (void)initDataWithBlock:(NSString *)title
+                   config: (XJActionSheetConfig *) config
+        cancelButtonTitle:(NSString *)cancelButtonTitle
+   destructiveButtonTitle:(NSString *)destructiveButtonTitle
+        otherButtonTitles:(NSArray *)otherButtonTitles
+         actionSheetBlock:(ACActionSheetBlock) actionSheetBlock {
+    if (config == nil) {
+        config = [[XJActionSheetConfig alloc] init];
+    }
+    _config = config;
+    _title = title;
+    _cancelButtonTitle = cancelButtonTitle.length>0 ? cancelButtonTitle : @"取消";
+    _destructiveButtonTitle = destructiveButtonTitle;
+    
+    NSMutableArray *titleArray = [NSMutableArray array];
+    if (_destructiveButtonTitle.length) {
+        [titleArray addObject:_destructiveButtonTitle];
+    }
+    [titleArray addObjectsFromArray:otherButtonTitles];
+    _otherButtonTitles = [NSArray arrayWithArray:titleArray];
+    self.actionSheetBlock = actionSheetBlock;
 }
 
 
@@ -119,7 +163,7 @@
     self.hidden = YES;
     
     _darkShadowView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, ACScreenWidth, ACScreenHeight)];
-    _darkShadowView.backgroundColor = ACRGB(20, 20, 20);
+    _darkShadowView.backgroundColor = _config.shadowBgColor;
     _darkShadowView.alpha = 0.0f;
     [self addSubview:_darkShadowView];
     
@@ -128,52 +172,61 @@
     
     
     _buttonBackgroundView = [[UIView alloc] initWithFrame:CGRectZero];
-    _buttonBackgroundView.backgroundColor = ACRGB(240, 240, 240);
+    _buttonBackgroundView.backgroundColor = _config.containerBgColor;
     [self addSubview:_buttonBackgroundView];
-    _buttonBackgroundView.layer.cornerRadius = ACViewCornerRadius;
+    _buttonBackgroundView.layer.cornerRadius = _config.cornerRadius;
     _buttonBackgroundView.clipsToBounds = YES;
     
+    float buttonHeight = _config.buttonHeight;
+    float titleViewHeight = _config.titleViewHeight;
+    
     if (self.title.length) {
-        UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, ACButtonHeight-ACTitleHeight, ACScreenWidth, ACTitleHeight)];
+        UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, ACScreenWidth, titleViewHeight)];
         titleLabel.text = _title;
         titleLabel.numberOfLines = 0;
-        titleLabel.textColor = ACRGB(125, 125, 125);
+        titleLabel.textColor = _config.titleLabelTextColor;
         titleLabel.textAlignment = NSTextAlignmentCenter;
-        titleLabel.font = [UIFont systemFontOfSize:13.0f];
-        titleLabel.backgroundColor = [UIColor whiteColor];
+        titleLabel.font = _config.titleFont;
+        titleLabel.backgroundColor = _config.titleLabelBgColor;
         [_buttonBackgroundView addSubview:titleLabel];
     }
-    
     
     for (int i = 0; i < _otherButtonTitles.count; i++) {
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
         button.tag = i;
         [button setTitle:_otherButtonTitles[i] forState:UIControlStateNormal];
-        button.backgroundColor = [UIColor whiteColor];
-        button.titleLabel.font = ACButtonTitleFont;
-        [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        if (i==0 && _destructiveButtonTitle.length) {
-            [button setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+        button.backgroundColor = _config.buttonNormalBgColor;
+        button.titleLabel.font = _config.buttonTextFont;
+        [button setTitleColor:_config.buttonTextColor forState:UIControlStateNormal];
+        if (i==0 && _destructiveButtonTitle.length && _config.destructiveButtonTextColor) {
+            [button setTitleColor:_config.destructiveButtonTextColor forState:UIControlStateNormal];
         }
-        UIImage *image = [UIImage imageWithContentsOfFile:[[self _acBundle] pathForResource:@"actionSheetHighLighted@2x" ofType:@"png"]];
-        [button setBackgroundImage:image forState:UIControlStateHighlighted];
+        //有设置按钮高亮背景色，则使用颜色背景
+        if (_config.buttonHighlightBgColor) {
+            [button addTarget:self action:@selector(_onButtonTouchDown:) forControlEvents:UIControlEventTouchDown];
+            [button addTarget:self action:@selector(_onButtonUpInside:) forControlEvents:UIControlEventTouchUpInside];
+            [button addTarget:self action:@selector(_onButtonUpInside:) forControlEvents:UIControlEventTouchDragExit];
+        } else {
+            UIImage *image = [UIImage imageWithContentsOfFile:[[self _acBundle] pathForResource:@"actionSheetHighLighted@2x" ofType:@"png"]];
+            [button setBackgroundImage:image forState:UIControlStateHighlighted];
+        }
         [button addTarget:self action:@selector(_didClickButton:) forControlEvents:UIControlEventTouchUpInside];
-        CGFloat buttonY = ACButtonHeight * (i + (_title.length>0?1:0));
-        button.frame = CGRectMake(0, buttonY, ACScreenWidth, ACButtonHeight);
+        CGFloat buttonY = buttonHeight * i + (_title.length > 0 ? titleViewHeight : 0);
+        button.frame = CGRectMake(0, buttonY, ACScreenWidth, buttonHeight);
         [_buttonBackgroundView addSubview:button];
         
-        
         UIView *line = [[UIView alloc] initWithFrame:CGRectZero];
-        line.backgroundColor = ACRGB(230, 230, 230);
-        line.frame = CGRectMake(0, buttonY, ACScreenWidth, 0.5);
+        line.backgroundColor = _config.separatorLineColor;
+        line.frame = CGRectMake(0, buttonY, ACScreenWidth, _config.separatorLineHeight);
         [_buttonBackgroundView addSubview:line];
     }
     
-    CGFloat separatorViewY = ACButtonHeight * (_otherButtonTitles.count + (_title.length>0?1:0));
+    CGFloat separatorViewY = buttonHeight * _otherButtonTitles.count + (_title.length > 0 ? titleViewHeight : 0);
     
     // 分割view
-    UIView *separatorView = [[UIView alloc] initWithFrame:CGRectMake(0, separatorViewY, ACScreenWidth, ACSeparatorViewHeight)];
-    separatorView.backgroundColor = ACRGB(240, 240, 240);
+    float separatorViewHeight = _config.separatorViewHeight;
+    UIView *separatorView = [[UIView alloc] initWithFrame:CGRectMake(0, separatorViewY, ACScreenWidth, separatorViewHeight)];
+    separatorView.backgroundColor = _config.separatorViewBgColor;
     [_buttonBackgroundView addSubview:separatorView];
     
     CGFloat safeAreaHeight = 0.0f;
@@ -181,24 +234,31 @@
     if (@available(iOS 11.0, *)) {
         safeAreaHeight = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
     }
-    
+    float cancelButtonHeight = _config.cancelButtonHeight;
     UIButton *cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    cancelButton.frame = CGRectMake(0, separatorViewY+ACSeparatorViewHeight, ACScreenWidth, ACButtonHeight+safeAreaHeight);
+    cancelButton.frame = CGRectMake(0, separatorViewY + separatorViewHeight, ACScreenWidth, cancelButtonHeight + safeAreaHeight);
     
     cancelButton.tag = _otherButtonTitles.count;
     [cancelButton setTitle:_cancelButtonTitle forState:UIControlStateNormal];
-    cancelButton.backgroundColor = [UIColor whiteColor];
-    cancelButton.titleLabel.font = ACButtonTitleFont;
-    [cancelButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    UIImage *image = [UIImage imageWithContentsOfFile:[[self _acBundle] pathForResource:@"actionSheetHighLighted@2x" ofType:@"png"]];
-    [cancelButton setBackgroundImage:image forState:UIControlStateHighlighted];
+    cancelButton.backgroundColor = _config.cancelBtnNormalBgColor;
+    cancelButton.titleLabel.font = _config.cancelButtonTextFont;
+    [cancelButton setTitleColor: _config.cancelButtonTextColor forState:UIControlStateNormal];
+    //有设置按钮高亮背景色，则使用颜色背景
+    if (_config.cancelBtnHighlightBgColor) {
+        [cancelButton addTarget:self action:@selector(_onButtonTouchDown:) forControlEvents:UIControlEventTouchDown];
+        [cancelButton addTarget:self action:@selector(_onButtonUpInside:) forControlEvents:UIControlEventTouchUpInside];
+        [cancelButton addTarget:self action:@selector(_onButtonUpInside:) forControlEvents:UIControlEventTouchDragExit];
+    } else {
+        UIImage *image = [UIImage imageWithContentsOfFile:[[self _acBundle] pathForResource:@"actionSheetHighLighted@2x" ofType:@"png"]];
+        [cancelButton setBackgroundImage:image forState:UIControlStateHighlighted];
+    }
     
     [cancelButton addTarget:self action:@selector(_didClickButton:) forControlEvents:UIControlEventTouchUpInside];
     [_buttonBackgroundView addSubview:cancelButton];
     
     [cancelButton setTitleEdgeInsets:UIEdgeInsetsMake(-safeAreaHeight, 0, 0, 0)];
     
-    CGFloat height = ACButtonHeight * (_otherButtonTitles.count + (_title.length>0?1:0)) + ACSeparatorViewHeight + cancelButton.frame.size.height;
+    CGFloat height = buttonHeight * _otherButtonTitles.count + (_title.length > 0 ? titleViewHeight : 0) + separatorViewHeight + cancelButton.frame.size.height;
     
     _buttonBackgroundView.frame = CGRectMake(0, ACScreenHeight, ACScreenWidth, height);
     
@@ -211,8 +271,8 @@
     
     self.hidden = NO;
     
-    [UIView animateWithDuration:ACShowAnimateDuration animations:^{
-        _darkShadowView.alpha = ACDarkShadowViewAlpha;
+    [UIView animateWithDuration:_config.showAnimationDuration animations:^{
+        _darkShadowView.alpha = _config.shadowViewAlpha;
         _buttonBackgroundView.transform = CGAffineTransformMakeTranslation(0, -_buttonBackgroundView.frame.size.height);
     } completion:^(BOOL finished) {
         
@@ -222,6 +282,18 @@
 
 
 #pragma mark - Private methods
+- (void)_onButtonTouchDown:(UIButton *)button {
+    if (_config.buttonHighlightBgColor) {
+        button.backgroundColor = _config.buttonHighlightBgColor;
+    }
+}
+
+- (void)_onButtonUpInside:(UIButton *)button {
+    if (_config.buttonNormalBgColor) {
+        button.backgroundColor = _config.buttonNormalBgColor;
+    }
+}
+
 - (void)_didClickButton:(UIButton *)button {
 
     if (_delegate && [_delegate respondsToSelector:@selector(actionSheet:didClickedButtonAtIndex:)]) {
@@ -250,7 +322,7 @@
 
 - (void)_hide {
     
-    [UIView animateWithDuration:ACHideAnimateDuration animations:^{
+    [UIView animateWithDuration:_config.hideAnimationDuration animations:^{
         _darkShadowView.alpha = 0;
         _buttonBackgroundView.transform = CGAffineTransformIdentity;
     } completion:^(BOOL finished) {
