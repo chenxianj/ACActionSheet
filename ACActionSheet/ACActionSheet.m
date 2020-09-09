@@ -341,19 +341,22 @@ otherButtonTitles:(NSString *)otherButtonTitles,
 }
 
 - (void)show {
-
     UIWindow *window = [UIApplication sharedApplication].keyWindow;
+    
+    [self showInWindow:window];
+}
+
+- (void)showInWindow:(UIWindow *)window {
     [window addSubview:self];
     
     self.hidden = NO;
     
     [UIView animateWithDuration:_config.showAnimationDuration animations:^{
-        _darkShadowView.alpha = _config.shadowViewAlpha;
-        _buttonBackgroundView.transform = CGAffineTransformMakeTranslation(0, -_buttonBackgroundView.frame.size.height);
+        self->_darkShadowView.alpha = self->_config.shadowViewAlpha;
+        self->_buttonBackgroundView.transform = CGAffineTransformMakeTranslation(0, -self->_buttonBackgroundView.frame.size.height);
     } completion:^(BOOL finished) {
         
     }];
-    
 }
 
 
