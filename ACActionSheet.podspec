@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'ACActionSheet'
-  s.version          = '1.0.7'
+  s.version          = '1.0.8'
   s.summary          = 'An easy way to use actionSheet/alertView'
 
   s.homepage         = 'https://github.com/GardenerYun'
