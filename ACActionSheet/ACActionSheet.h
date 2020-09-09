@@ -69,6 +69,7 @@ typedef void(^ACActionCancelBlock)();
 @property (nonatomic, copy) NSArray<XJAction *> *actions;
 
 - (void)show;
+- (void)showInWindow:(UIWindow *)window;
 
 @end
 
