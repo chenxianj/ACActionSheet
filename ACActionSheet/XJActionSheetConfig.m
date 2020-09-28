@@ -53,6 +53,7 @@
         self.buttonTextColor = ACRGB(225, 74, 73, 1);
         self.buttonTextFont = [UIFont systemFontOfSize:15.0f];
         self.buttonHeight = 57;
+        self.separatorLineHeight = 0.5;
         self.separatorLineColor = ACRGB(255, 255, 255, 0.05);
         self.separatorViewBgColor = ACRGB(37, 38, 39, 1);
         self.separatorViewHeight = 8;
