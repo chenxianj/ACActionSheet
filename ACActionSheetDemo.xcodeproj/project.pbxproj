@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		5806BA0625072D0100718A23 /* XJActionSheetConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 5806BA0525072D0100718A23 /* XJActionSheetConfig.m */; };
 		5806BA0A2507816400718A23 /* XJAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 5806BA092507816400718A23 /* XJAction.m */; };
+		58A51702254040D40017ED9C /* CustomLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A51701254040D40017ED9C /* CustomLabel.m */; };
 		5A866BB423A0BFF600615566 /* UIAlertController+ACAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A866BB223A0BFF600615566 /* UIAlertController+ACAlertView.m */; };
 		5AE026B4239E2E3400C853A1 /* ACActionSheet.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5AE026AF239E2E3400C853A1 /* ACActionSheet.bundle */; };
 		5AE026B5239E2E3400C853A1 /* ACActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AE026B0239E2E3400C853A1 /* ACActionSheet.m */; };
@@ -25,6 +26,8 @@
 		5806BA0525072D0100718A23 /* XJActionSheetConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XJActionSheetConfig.m; sourceTree = "<group>"; };
 		5806BA082507816400718A23 /* XJAction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XJAction.h; sourceTree = "<group>"; };
 		5806BA092507816400718A23 /* XJAction.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XJAction.m; sourceTree = "<group>"; };
+		58A51701254040D40017ED9C /* CustomLabel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomLabel.m; sourceTree = "<group>"; };
+		58A51705254041610017ED9C /* CustomLabel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomLabel.h; sourceTree = "<group>"; };
 		5A866BB223A0BFF600615566 /* UIAlertController+ACAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIAlertController+ACAlertView.m"; sourceTree = "<group>"; };
 		5A866BB323A0BFF600615566 /* UIAlertController+ACAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertController+ACAlertView.h"; sourceTree = "<group>"; };
 		5AE026AE239E2E3400C853A1 /* ACActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACActionSheet.h; sourceTree = "<group>"; };
@@ -73,6 +76,8 @@
 				5AE026B0239E2E3400C853A1 /* ACActionSheet.m */,
 				5AE026AF239E2E3400C853A1 /* ACActionSheet.bundle */,
 				5A866BB123A0BFF600615566 /* ACAlertView */,
+				58A51701254040D40017ED9C /* CustomLabel.m */,
+				58A51705254041610017ED9C /* CustomLabel.h */,
 			);
 			path = ACActionSheet;
 			sourceTree = "<group>";
@@ -198,6 +203,7 @@
 				5A866BB423A0BFF600615566 /* UIAlertController+ACAlertView.m in Sources */,
 				5806BA0A2507816400718A23 /* XJAction.m in Sources */,
 				5806BA0625072D0100718A23 /* XJActionSheetConfig.m in Sources */,
+				58A51702254040D40017ED9C /* CustomLabel.m in Sources */,
 				5C3538961CD8737300731917 /* main.m in Sources */,
 				5C3538921CD8737300731917 /* AppDelegate.m in Sources */,
 			);

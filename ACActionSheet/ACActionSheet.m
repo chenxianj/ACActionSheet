@@ -12,6 +12,7 @@
 //
 
 #import "ACActionSheet.h"
+#import "CustomLabel.h"
 
 #define ACScreenWidth   [UIScreen mainScreen].bounds.size.width
 #define ACScreenHeight  [UIScreen mainScreen].bounds.size.height
@@ -248,13 +249,14 @@ otherButtonTitles:(NSString *)otherButtonTitles,
     float titleViewHeight = _config.titleViewHeight;
     
     if (self.title.length) {
-        UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, ACScreenWidth, titleViewHeight)];
+        CustomLabel *titleLabel = [[CustomLabel alloc] initWithFrame:CGRectMake(0, 0, ACScreenWidth - 32, titleViewHeight)];
         titleLabel.text = _title;
-        titleLabel.numberOfLines = 0;
+        titleLabel.numberOfLines = 1;
         titleLabel.textColor = _config.titleLabelTextColor;
         titleLabel.textAlignment = NSTextAlignmentCenter;
         titleLabel.font = _config.titleFont;
         titleLabel.backgroundColor = _config.titleLabelBgColor;
+        titleLabel.textInsets = UIEdgeInsetsMake(0.f, 16.0f, 0.f, 16.0f);
         [_buttonBackgroundView addSubview:titleLabel];
     }
     

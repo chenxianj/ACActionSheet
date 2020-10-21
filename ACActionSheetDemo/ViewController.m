@@ -98,7 +98,7 @@
     
 //    ACActionSheet *actionSheet = [[ACActionSheet alloc] initWithTitle:@"保存或删除数据" config:config delegate:self cancelButtonTitle:@"取消"];
     
-    ACActionSheet *actionSheet = [[ACActionSheet alloc] initWithTitle:@"保存或删除数据" actions:data config:config cancelButtonTitle:@"取消" actionSheetBlock:^(NSInteger buttonIndex, XJAction *action) {
+    ACActionSheet *actionSheet = [[ACActionSheet alloc] initWithTitle:@"保存或删除数据保存或删除数据保存或删除数据保存或删除数据保存或删除数据保存或删除数据保存或删除数据保存或删除数据" actions:data config:config cancelButtonTitle:@"取消" actionSheetBlock:^(NSInteger buttonIndex, XJAction *action) {
         
     } actionCancelBlock:^{
          NSLog(@"click cancel");
